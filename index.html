@@ -2,71 +2,51 @@
  "무단 수정 금지" 
 <html lang="ko">
 <head>
+<!doctype html>
+<html lang="ko">
+<head>
 <script>
-// [조용한 보안 스크립트] 경고창 없이 기능만 무력화
 (function() {
-    // 1. 우클릭, 드래그, 선택 차단 함수
+    // 경고창 없이 조용히 막는 함수
     function block(e) {
         e.preventDefault();
         e.stopPropagation();
         return false;
     }
 
-    // 이벤트 리스너 등록 (경고창 없음!)
-    document.addEventListener('contextmenu', block); // 우클릭
-    document.addEventListener('dragstart', block);   // 이미지 드래그
-    document.addEventListener('selectstart', block); // 텍스트 선택
-
-    // 2. 개발자 도구 단축키 차단 (F12, Ctrl+Shift+I 등)
+    // 1. 마우스 오른쪽 클릭 차단 (최우선 순위 적용)
+    document.addEventListener('contextmenu', block, true);
+    
+    // 2. 드래그 & 선택 차단
+    document.addEventListener('dragstart', block, true);
+    document.addEventListener('selectstart', block, true);
+    
+    // 3. 키보드 단축키 차단 (F12, 소스보기 등)
     document.addEventListener('keydown', function(e) {
         // F12
-        if (e.keyCode === 123) {
-            block(e);
-        }
-        // Ctrl+Shift+I, J, C (개발자 도구)
-        if (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74 || e.keyCode === 67)) {
-            block(e);
-        }
+        if (e.keyCode === 123) block(e);
+        // Ctrl+Shift+I (개발자도구)
+        if (e.ctrlKey && e.shiftKey && e.keyCode === 73) block(e);
+        // Ctrl+Shift+J (콘솔)
+        if (e.ctrlKey && e.shiftKey && e.keyCode === 74) block(e);
+        // Ctrl+Shift+C (요소선택)
+        if (e.ctrlKey && e.shiftKey && e.keyCode === 67) block(e);
         // Ctrl+U (소스보기)
-        if (e.ctrlKey && e.keyCode === 85) {
-            block(e);
-        }
-    });
+        if (e.ctrlKey && e.keyCode === 85) block(e);
+    }, true);
 })();
 </script>
-<script>
-// [강력 보안] 문서 전체에 대해 이벤트 강제 차단
-// 우클릭 차단
-document.addEventListener('contextmenu', function(e) {
-  e.preventDefault();
-  return false;
-}, true);
-
-// 드래그/선택 차단
-document.addEventListener('selectstart', function(e) {
-  e.preventDefault();
-  return false;
-}, true);
-
-// 개발자 도구 단축키 원천 봉쇄
-document.addEventListener('keydown', function(e) {
-  // F12
-  if (e.keyCode === 123) {
-    e.preventDefault();
-    e.returnValue = false;
-  }
-  // Ctrl+Shift+I, J, C (개발자 도구)
-  if (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74 || e.keyCode === 67)) {
-    e.preventDefault();
-    e.returnValue = false;
-  }
-  // Ctrl+U (소스보기)
-  if (e.ctrlKey && e.keyCode === 85) {
-    e.preventDefault();
-    e.returnValue = false;
-  }
-}, true);
-</script>
+<style>
+    /* 4. CSS로 드래그 원천 봉쇄 */
+    body {
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+</style>
+<meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>티니핑 게임 통합)</title>
